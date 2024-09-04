@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Clientes</h2>
+<form method="POST" action="/agregar_cliente">
+    <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" required>
+    </div>
+    <div class="form-group">
+        <label for="dpi">DPI</label>
+        <input type="text" class="form-control" id="dpi" name="dpi" required>
+    </div>
+    <div class="form-group">
+        <label for="correo">Correo</label>
+        <input type="email" class="form-control" id="correo" name="correo" required>
+    </div>
+    <div class="form-group">
+        <label for="telefono">Teléfono</label>
+        <input type="text" step="any" class="form-control" id="telefono" name="telefono" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Agregar Cliente</button>
+</form>
+<hr>
+
+<form method="get" action="{{ url_for('cliente') }}">
+    <input type="text" name="nombre" placeholder="Nombre">
+    <input type="text" name="dpi" placeholder="DPI">
+    <button type="submit">Buscar</button>
+</form>
+
+
+<h3>Lista de Clientes</h3>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Correo</th>
+        <th scope="col">Tel:</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for cliente in clientes %}
+      <tr>
+        <th scope="row">{{ cliente.idCliente }}</th>
+        <td>{{ cliente.nombre }} </td>
+        <td>{{ cliente.correo }}</td>
+        <td>{{ cliente.telefono }}</td>
+      </tr>
+    </tbody>
+  </table>
+{% endfor %}
+{% endblock %}

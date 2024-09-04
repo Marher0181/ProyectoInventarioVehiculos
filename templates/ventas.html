@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Ventas</h2>
+<form method="POST" action="/agregar_venta">
+
+    <div class="form-group">
+        <label for="idVehiculo">Vehículo</label>
+        <select class="form-control" id="idVehiculo" name="idVehiculo" required>
+            {% for vehiculo in vehiculos %}
+            <option value="{{ vehiculo.idVehiculo }}"> {{ vehiculo.marca }} - {{ vehiculo.modelo }} - ${{ vehiculo.precio}} </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="idCliente">Cliente</label>
+        <select class="form-control" id="idCliente" name="idCliente" required>
+            {% for cliente in clientes %}
+            <option value="{{ cliente.idCliente }}">{{ cliente.nombre }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Agregar Venta</button>
+</form>
+<hr>
+<h3>Lista de Ventas</h3>
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Venta ID: </th>
+        <th scope="col">Vehículo:</th>
+        <th scope="col">Cliente al que fue vendido:</th>
+        <th scope="col">Fecha venta:</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for venta, vehiculo, cliente in ventas %}
+      <tr>
+        <th scope="row">{{ venta.idVenta }}</th>
+        <td>{{ vehiculo.marca }} - {{ vehiculo.modelo }} - {{ vehiculo.anio }} </td>
+        <td>{{ cliente.nombre }}</td>
+        <td>{{ venta.fechaVenta }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
