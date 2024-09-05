@@ -14,11 +14,12 @@
       <div class="col-md-2">
         <input type="text" class="form-control bg-dark text-white" name="dpi" placeholder="DPI">
       </div>
-      <div class="col-md-2">
-        <button class="btn btn-primary me-3" type="submit">Buscar</button>
+      <div class="col-md-8 d-flex justify-content-end mb-3">
+        <button class="btn btn-primary me-2" type="submit">Buscar</button>
+        <a href="{{ url_for('agregar_cliente') }}" class="btn btn-success" style="margin-left: 10px;">Agregar</a>
       </div>
-      <div class="col-md-4">
-        <a href="{{ url_for('agregar_cliente') }}" class="btn btn-success">Agregar</a>
+      
+        
       </div>
     </div>
   </div>
