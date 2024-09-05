@@ -1,54 +1,59 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Clientes</h2>
-<form method="POST" action="/agregar_cliente">
-    <div class="form-group">
-        <label for="nombre">Nombre</label>
-        <input type="text" class="form-control" id="nombre" name="nombre" required>
-    </div>
-    <div class="form-group">
-        <label for="dpi">DPI</label>
-        <input type="text" class="form-control" id="dpi" name="dpi" required>
-    </div>
-    <div class="form-group">
-        <label for="correo">Correo</label>
-        <input type="email" class="form-control" id="correo" name="correo" required>
-    </div>
-    <div class="form-group">
-        <label for="telefono">Teléfono</label>
-        <input type="text" step="any" class="form-control" id="telefono" name="telefono" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Agregar Cliente</button>
-</form>
-<hr>
+<body class="bg-dark">
+  
+  <h1 class="text-white text-center my-4">Listar Clientes</h1>
 
-<form method="get" action="{{ url_for('cliente') }}">
-    <input type="text" name="nombre" placeholder="Nombre">
-    <input type="text" name="dpi" placeholder="DPI">
-    <button type="submit">Buscar</button>
+<form method="get" action="{{ url_for('cliente') }}" >
+  <div class="container">
+    <div class="row ">
+      <div class="col-md-2">
+        <input type="text" class="form-control bg-dark text-white" name="nombre" placeholder="Nombre">
+      </div>
+      <div class="col-md-2">
+        <input type="text" class="form-control bg-dark text-white" name="dpi" placeholder="DPI">
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-primary me-3" type="submit">Buscar</button>
+      </div>
+      <div class="col-md-4">
+        <a href="{{ url_for('agregar_cliente') }}" class="btn btn-success">Agregar</a>
+      </div>
+    </div>
+  </div>
 </form>
 
-
-<h3>Lista de Clientes</h3>
-<table class="table">
+<div class="container mt-4">
+  <table class="table table-dark">
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">Correo</th>
+        <th scope="col">Nombre:</th>
+        <th scope="col">DPI:</th>
+        <th scope="col">Correo:</th>
         <th scope="col">Tel:</th>
+        <th scope="col">Acciones:</th>
       </tr>
     </thead>
     <tbody>
-    {% for cliente in clientes %}
+      {% for cliente in clientes %}
       <tr>
         <th scope="row">{{ cliente.idCliente }}</th>
         <td>{{ cliente.nombre }} </td>
+        <td>{{ cliente.dpi }} </td>
         <td>{{ cliente.correo }}</td>
         <td>{{ cliente.telefono }}</td>
+        <td>
+          <a href="{{ url_for('modificar_cliente', id=cliente.idCliente) }}" class="btn btn-info btn-sm">Modificar</a>
+          <a href="{{ url_for('eliminar_cliente', id=cliente.idCliente) }}" class="btn btn-danger btn-sm">Eliminar</a>
+  
+        </td>
       </tr>
+    {% endfor %}
     </tbody>
   </table>
-{% endfor %}
+</div>
+
 {% endblock %}
+</body>

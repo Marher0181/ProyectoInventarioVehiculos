@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<body class="bg-dark">
+    <div class="container">
+    <h2 class="text-white text-center my-4">Agregar Venta</h2>
+    
+    <form method="POST" action="/agregar_venta">
+    
+      <div class="row">
+        <div class="col-md-4">
+            <div class="form-group text-white"  >
+            <label for="idVehiculo">Vehículo</label>
+            <select class="form-control bg-dark text-white" id="idVehiculo" name="idVehiculo" required>
+                {% for vehiculo in vehiculos %}
+                <option value="{{ vehiculo.idVehiculo }}"> {{ vehiculo.marca }} - {{ vehiculo.modelo }} - ${{ vehiculo.precio}} </option>
+                {% endfor %}
+            </select>
+            </div>
+            </div>
+            <div class="col-md-4">
+        <div class="form-group text-white">
+            <label for="idCliente">Cliente</label>
+            <select class="form-control bg-dark text-white" id="idCliente" name="idCliente" required>
+                {% for cliente in clientes %}
+                <option value="{{ cliente.idCliente }}">{{ cliente.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+      </div>
+    </div>
+    <div class="d-flex justify-content-center mt-3" style="gap: 10px;">
+         
+        <button type="submit" class="btn btn-success">Agregar Venta</button>
+        <a href="{{ url_for('venta') }}" class="btn btn-primary">Volver al menú</a>
+    </div>
+    </form>
+</div>
+</body>
+    {% endblock %}

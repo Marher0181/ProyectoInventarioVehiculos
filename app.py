@@ -1,13 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
+from models import db
 from datetime import datetime
-app = Flask(__name__)
+from config import Config
+from datetime import date
 
-# Configuración de la base de datos
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://ADMINMH:Marlon123@PC-DEV36/Inventario_Vehiculos?driver=ODBC+Driver+17+for+SQL+Server'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://ADMIN:ADMIN@DESKTOP-HMS6GDC\\SQLEXPRESS/Inventario_Vehiculos?driver=ODBC+Driver+17+for+SQL+Server'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+app = Flask(__name__)
+app.config.from_object(Config)
+db.init_app(app)
 
 class Vehiculo(db.Model):
     __tablename__ = 'Vehiculo'
@@ -121,18 +120,48 @@ def cliente():
         query = query.filter(Cliente.dpi.like(f'%{dpi}%'))
 
     clientes = query.all()
-    return render_template('clientes.html', clientes=clientes)
+    return render_template('clientes/clientes.html', clientes=clientes)
 
-@app.route('/agregar_cliente', methods=['POST'])
+@app.route('/agregar_cliente', methods=['GET','POST'])
 def agregar_cliente():
-    nombre = request.form['nombre']
-    dpi = request.form['dpi']
-    correo = request.form['correo']
-    telefono = request.form['telefono']
-    nuevo_cliente = Cliente(nombre=nombre, dpi=dpi, correo=correo, telefono=telefono)
-    db.session.add(nuevo_cliente)
-    db.session.commit()
-    return redirect(url_for('cliente'))
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        dpi = request.form['dpi']
+        correo = request.form['correo']
+        telefono = request.form['telefono']
+        nuevo_cliente = Cliente(nombre=nombre, dpi=dpi, correo=correo, telefono=telefono)
+        db.session.add(nuevo_cliente)
+        db.session.commit()
+        return redirect(url_for('cliente'))
+    return render_template('clientes/agregar_cliente.html')
+
+
+@app.route('/modificar_cliente/<int:id>', methods=['GET', 'POST'])
+def modificar_cliente(id):
+    cliente = Cliente.query.get_or_404(id)
+
+    if request.method == 'POST':
+        cliente.nombre = request.form['nombre']
+        cliente.dpi = request.form['dpi']
+        cliente.correo = request.form['correo']
+        cliente.telefono = request.form['telefono']
+
+        db.session.commit()
+        return redirect(url_for('cliente'))
+
+    return render_template('clientes/modificar_cliente.html', cliente=cliente)
+
+
+@app.route('/eliminar_cliente/<int:id>', methods=['GET', 'POST'])
+def eliminar_cliente(id):
+    cliente = Cliente.query.get_or_404(id)
+
+    if request.method == 'POST':
+        db.session.delete(cliente)
+        db.session.commit()
+        return redirect(url_for('cliente'))
+
+    return render_template('clientes/eliminar_cliente.html', cliente=cliente)
 
 @app.route('/venta')
 def venta():
@@ -144,18 +173,22 @@ def venta():
     vehiculos = Vehiculo.query.filter_by(disponibilidad=1)
     return render_template('ventas/ventas.html', ventas=ventas, clientes=clientes, vehiculos=vehiculos)
 
-@app.route('/agregar_venta', methods=['POST'])
+@app.route('/agregar_venta', methods=['GET', 'POST'])
 def agregar_venta():
-    idVehiculo = request.form['idVehiculo']
-    idCliente = request.form['idCliente']
-    sql = db.text("EXECUTE sp_venta :idVehiculo, :idCliente")
-    try:
-        db.session.execute(sql, {'idVehiculo': int(idVehiculo), 'idCliente': int(idCliente)})
-        db.session.commit()
-    except Exception as e:
-        print(f"Error al realizar la venta: {e}")
-    return redirect(url_for('venta'))
+    
+    clientes = Cliente.query.all()
+    vehiculos = Vehiculo.query.filter_by(disponibilidad=1)
+    if request.method == 'POST':
+        idVehiculo = request.form['idVehiculo']
+        idCliente = request.form['idCliente']
+        sql = db.text("EXECUTE sp_venta :idVehiculo, :idCliente")
+        try:
+            db.session.execute(sql, {'idVehiculo': int(idVehiculo), 'idCliente': int(idCliente)})
+            db.session.commit()
+            return redirect(url_for('venta'))
+        except Exception as e:
+            print(f"Error al realizar la venta: {e}")
+    return render_template('ventas/agregar_venta.html', clientes=clientes, vehiculos=vehiculos)
 
 if __name__ == '__main__':
-    db.create_all()
     app.run(debug=True)

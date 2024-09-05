@@ -1,30 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Ventas</h2>
-<form method="POST" action="/agregar_venta">
-
-    <div class="form-group">
-        <label for="idVehiculo">Vehículo</label>
-        <select class="form-control" id="idVehiculo" name="idVehiculo" required>
-            {% for vehiculo in vehiculos %}
-            <option value="{{ vehiculo.idVehiculo }}"> {{ vehiculo.marca }} - {{ vehiculo.modelo }} - ${{ vehiculo.precio}} </option>
-            {% endfor %}
-        </select>
+<body class="bg-dark">
+  <h3 class="text-white text-center my-4">Lista de Ventas</h3>
+  <div class="container">
+    <div class="row">
+      <!-- Columna con el botón alineado a la derecha -->
+      <div class="col-md-12 d-flex justify-content-end mb-3">
+        <a href="{{ url_for('agregar_venta') }}" class="btn btn-success">Agregar</a>
+      </div>
     </div>
-    <div class="form-group">
-        <label for="idCliente">Cliente</label>
-        <select class="form-control" id="idCliente" name="idCliente" required>
-            {% for cliente in clientes %}
-            <option value="{{ cliente.idCliente }}">{{ cliente.nombre }}</option>
-            {% endfor %}
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary">Agregar Venta</button>
-</form>
-<hr>
-<h3>Lista de Ventas</h3>
-<table class="table">
+  <table class="table table-dark">
     <thead>
       <tr>
         <th scope="col">Venta ID: </th>
@@ -44,4 +30,6 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 {% endblock %}
+</body>

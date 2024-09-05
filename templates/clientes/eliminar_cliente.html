@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body class="bg-dark">
+    <div class="container">
+        <h2 class="text-center text-white my-4">Eliminar Cliente</h2>
+                
+        <form method="POST" action="">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group text-white text-center" >
+                        <label for="Label">Seguro deseas eliminar el Cliente: {{ cliente.nombre }} - {{ cliente.dpi }}</label>
+                </div>
+            
+            <div class="form-group text-white text-center">
+                <button type="submit" class="btn btn-danger mt-3">Eliminar</button>
+                <a href="{{ url_for('cliente') }}"  class="btn btn-primary mt-3">Volver</button>
+            </div>
+        </div>
+            
+        </form>
+    </div>
+</body>
+{% endblock %}

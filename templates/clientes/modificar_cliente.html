@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body class="bg-dark">
+<div class="container">
+    <h2 class="text-center text-white my-4">Agregar Cliente</h2>
+
+    <form  method="POST" action="">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group text-white "  >
+                    <label for="nombre">Nombre Cliente:</label>
+                    <input type="text" class="form-control  bg-dark text-white" id="nombre" name="nombre" value="{{ cliente.nombre }}" required>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group text-white" >
+                    <label for="dpi">DPI (Documento Personal de Identificacion)</label>
+                    <input type="text" class="form-control  bg-dark text-white" id="dpi" name="dpi" value="{{ cliente.dpi }}" required>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group text-white" >
+                    <label for="correo">Correo eléctronico</label>
+                    <input type="email" class="form-control  bg-dark text-white" id="correo" name="correo" value="{{ cliente.correo }}" required>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group text-white" >
+                    <label for="telefono">Teléfono</label>
+                    <input type="text" step="any" class="form-control  bg-dark text-white" id="telefono" name="telefono"value="{{ cliente.telefono }}" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-3" style="gap: 10px;">
+            <button type="submit" class="btn btn-info">Modificar Cliente</button>
+            <a href="{{ url_for('cliente') }}" class="btn btn-primary">Volver al menú</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+</body>
