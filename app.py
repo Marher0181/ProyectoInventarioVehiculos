@@ -181,7 +181,7 @@ def agregar_venta():
     if request.method == 'POST':
         idVehiculo = request.form['idVehiculo']
         idCliente = request.form['idCliente']
-        sql = db.text("EXECUTE sp_venta :idVehiculo, :idCliente")
+        sql = db.text("EXECUTE sp_RegistrarVenta :idVehiculo, :idCliente")
         try:
             db.session.execute(sql, {'idVehiculo': int(idVehiculo), 'idCliente': int(idCliente)})
             db.session.commit()
