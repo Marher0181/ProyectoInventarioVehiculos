@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body class="bg-dark">
+    <div class="container">
+        <h2 class="text-center text-white my-4">Modificar Vehículo</h2>
+        
+        <form method="POST" action="">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group text-white" >
+                        <label for="marca">Marca</label>
+                        <input type="text" class="form-control bg-dark text-white" id="marca" name="marca" value="{{ vehiculo.marca }}" required>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group text-white" >
+                        <label for="modelo">Modelo</label>
+                        <input type="text" class="form-control bg-dark text-white" id="modelo" name="modelo" value="{{ vehiculo.modelo }}" required>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group text-white" >
+                        <label for="anio">Año</label>
+                        <input type="number" class="form-control bg-dark text-white" id="anio" name="anio" value="{{ vehiculo.anio }}" required>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group text-white" >
+                        <label for="precio">Precio</label>
+                        <input type="number" step="any" class="form-control bg-dark text-white" id="precio" name="precio" value="{{ vehiculo.precio }}" required>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center mt-3" style="gap: 10px;">
+                <button type="submit" class="btn btn-info mt-3">Guardar Cambios</button>
+                <button href="{{ url_for('vehiculo') }}"  class="btn btn-primary mt-3">Vplver</button>
+            </div>
+
+            
+        </form>
+    </div>
+</body>
+{% endblock %}

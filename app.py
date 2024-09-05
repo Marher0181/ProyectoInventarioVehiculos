@@ -4,7 +4,8 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Configuración de la base de datos
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://ADMINMH:Marlon123@PC-DEV36/Inventario_Vehiculos?driver=ODBC+Driver+17+for+SQL+Server'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://ADMINMH:Marlon123@PC-DEV36/Inventario_Vehiculos?driver=ODBC+Driver+17+for+SQL+Server'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://ADMIN:ADMIN@DESKTOP-HMS6GDC\\SQLEXPRESS/Inventario_Vehiculos?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -13,7 +14,7 @@ class Vehiculo(db.Model):
     idVehiculo = db.Column(db.Integer, primary_key=True)
     marca = db.Column(db.String(100), nullable=False)
     modelo = db.Column(db.String(100), nullable=False)
-    anio = db.Column(db.String(4), nullable=False)
+    anio = db.Column(db.Integer, nullable=False)
     precio = db.Column(db.Float, nullable=False)
     disponibilidad = db.Column(db.Integer, nullable=False)
     ventas = db.relationship('Venta', back_populates='vehiculo')
@@ -37,6 +38,7 @@ class Venta(db.Model):
     cliente = db.relationship('Cliente', back_populates='ventas')
 
 
+
 @app.route('/')
 @app.route('/vehiculo')
 def vehiculo():
@@ -58,21 +60,52 @@ def vehiculo():
         query = query.filter(Vehiculo.precio >= float(precio_min))
     if precio_max:
         query = query.filter(Vehiculo.precio <= float(precio_max))
+    else:
+        vehiculos = query.all()
 
-    vehiculos = query.all()
-    return render_template('vehiculos.html', vehiculos=vehiculos)
+    return render_template('vehiculos/vehiculos.html', vehiculos=vehiculos)
 
-@app.route('/agregar_vehiculo', methods=['POST'])
+@app.route('/agregar_vehiculo', methods=['GET', 'POST'])
 def agregar_vehiculo():
-    marca = request.form['marca']
-    modelo = request.form['modelo']
-    anio = request.form['anio']
-    precio = request.form['precio']
-    disponibilidad = 1
-    nuevo_vehiculo = Vehiculo(marca=marca, modelo=modelo, anio=anio, precio=precio, disponibilidad=disponibilidad)
-    db.session.add(nuevo_vehiculo)
-    db.session.commit()
-    return redirect(url_for('vehiculo'))
+    if request.method == 'POST':
+        marca = request.form['marca']
+        modelo = request.form['modelo']
+        anio = request.form['anio']
+        precio = request.form['precio']
+        disponibilidad = 1
+        nuevo_vehiculo = Vehiculo(marca=marca, modelo=modelo, anio=anio, precio=precio, disponibilidad=disponibilidad)
+        db.session.add(nuevo_vehiculo)
+        db.session.commit()
+        return redirect(url_for('vehiculo'))
+    return render_template('vehiculos/agregar_vehiculo.html')
+
+@app.route('/modificar_vehiculo/<int:id>', methods=['GET', 'POST'])
+def modificar_vehiculo(id):
+    vehiculo = Vehiculo.query.get_or_404(id)
+
+    if request.method == 'POST':
+        vehiculo.marca = request.form['marca']
+        vehiculo.modelo = request.form['modelo']
+        vehiculo.anio = request.form['anio']
+        vehiculo.precio = request.form['precio']
+        vehiculo.disponibilidad = 1 
+
+        db.session.commit()
+        return redirect(url_for('vehiculo'))
+
+    return render_template('vehiculos/modificar_vehiculo.html', vehiculo=vehiculo)
+
+
+@app.route('/eliminar_vehiculo/<int:id>', methods=['GET', 'POST'])
+def eliminar_vehiculo(id):
+    vehiculo = Vehiculo.query.get_or_404(id)
+
+    if request.method == 'POST':
+        db.session.delete(vehiculo)
+        db.session.commit()
+        return redirect(url_for('vehiculo'))
+
+    return render_template('vehiculos/eliminar_vehiculo.html', vehiculo=vehiculo)
 
 
 @app.route('/clientes')
@@ -109,7 +142,7 @@ def venta():
           .all())
     clientes = Cliente.query.all()
     vehiculos = Vehiculo.query.filter_by(disponibilidad=1)
-    return render_template('ventas.html', ventas=ventas, clientes=clientes, vehiculos=vehiculos)
+    return render_template('ventas/ventas.html', ventas=ventas, clientes=clientes, vehiculos=vehiculos)
 
 @app.route('/agregar_venta', methods=['POST'])
 def agregar_venta():
@@ -124,4 +157,5 @@ def agregar_venta():
     return redirect(url_for('venta'))
 
 if __name__ == '__main__':
+    db.create_all()
     app.run(debug=True)

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<body class="bg-dark">
+  
+  <h1 class="text-white text-center my-4">Listar Vehículos</h1>
+
+<form method="get" action="{{ url_for('vehiculo') }}" >
+  <div class="container">
+    <div class="row ">
+      <div class="col-md-2">
+        <input class="form-control bg-dark text-white" type="text" name="marca" placeholder="Marca">
+      </div>
+      <div class="col-md-2">
+        <input class="form-control bg-dark text-white" type="text" name="modelo" placeholder="Modelo">
+      </div>
+      <div class="col-md-2">
+        <input class="form-control bg-dark text-white" type="number" name="anio" placeholder="Año">
+      </div>
+      <div class="col-md-2">
+        <input class="form-control bg-dark text-white" type="number" name="precio_min" placeholder="Precio mínimo">
+      </div>
+      <div class="col-md-2">
+        <input class="form-control bg-dark text-white" type="number" name="precio_max" placeholder="Precio máximo">
+      </div>
+      <div class="d-flex gap-4">
+        <button class="btn btn-primary me-3" type="submit">Buscar</button>
+        <a href="{{ url_for('agregar_vehiculo') }}" class="btn btn-success">Agregar</a>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="container mt-4">
+  <table class="table table-dark">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Marca</th>
+        <th scope="col">Modelo</th>
+        <th scope="col">Precio</th>
+        <th scope="col">Año</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for vehiculo in vehiculos %}
+      <tr>
+        <th scope="row">{{ vehiculo.idVehiculo }}</th>
+        <td>{{ vehiculo.marca }}</td>
+        <td>{{ vehiculo.modelo }}</td>
+        <td>${{ vehiculo.precio }}</td>
+        <td>{{ vehiculo.anio }}</td>
+        <td>
+          <a href="{{ url_for('modificar_vehiculo', id=vehiculo.idVehiculo) }}" class="btn btn-info btn-sm">Modificar</a>
+          <a href="{{ url_for('eliminar_vehiculo', id=vehiculo.idVehiculo) }}" class="btn btn-danger btn-sm">Eliminar</a>
+  
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+</body>
