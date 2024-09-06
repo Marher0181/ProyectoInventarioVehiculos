@@ -38,23 +38,29 @@
       </tr>
     </thead>
     <tbody>
-      {% for cliente in clientes %}
-      <tr>
-        <th scope="row">{{ cliente.idCliente }}</th>
-        <td>{{ cliente.nombre }} </td>
-        <td>{{ cliente.dpi }} </td>
-        <td>{{ cliente.correo }}</td>
-        <td>{{ cliente.telefono }}</td>
-        <td>
-          <a href="{{ url_for('modificar_cliente', id=cliente.idCliente) }}" class="btn btn-info btn-sm">Modificar</a>
-          <a href="{{ url_for('eliminar_cliente', id=cliente.idCliente) }}" class="btn btn-danger btn-sm">Eliminar</a>
-  
-        </td>
-      </tr>
-    {% endfor %}
+      {% if clientes|length == 0 %}
+        <tr>
+          <td colspan="6" class="text-center">No hay clientes disponibles</td>
+        </tr>
+      {% else %}
+        {% for cliente in clientes %}
+          <tr>
+            <th scope="row">{{ cliente.idCliente }}</th>
+            <td>{{ cliente.nombre }} </td>
+            <td>{{ cliente.dpi }} </td>
+            <td>{{ cliente.correo }}</td>
+            <td>{{ cliente.telefono }}</td>
+            <td>
+              <a href="{{ url_for('modificar_cliente', id=cliente.idCliente) }}" class="btn btn-info btn-sm">Modificar</a>
+              <a href="{{ url_for('eliminar_cliente', id=cliente.idCliente) }}" class="btn btn-danger btn-sm">Eliminar</a>
+            </td>
+          </tr>
+        {% endfor %}
+      {% endif %}
     </tbody>
   </table>
 </div>
+
 
 {% endblock %}
 </body>

@@ -44,20 +44,26 @@
       </tr>
     </thead>
     <tbody>
-    {% for vehiculo in vehiculos %}
+      {% if vehiculos|length == 0 %}
       <tr>
-        <th scope="row">{{ vehiculo.idVehiculo }}</th>
-        <td>{{ vehiculo.marca }}</td>
-        <td>{{ vehiculo.modelo }}</td>
-        <td>${{ vehiculo.precio }}</td>
-        <td>{{ vehiculo.anio }}</td>
-        <td>
-          <a href="{{ url_for('modificar_vehiculo', id=vehiculo.idVehiculo) }}" class="btn btn-info btn-sm">Modificar</a>
-          <a href="{{ url_for('eliminar_vehiculo', id=vehiculo.idVehiculo) }}" class="btn btn-danger btn-sm">Eliminar</a>
-  
-        </td>
+        <td colspan="6" class="text-center">No hay vehículos disponibles</td>
       </tr>
-    {% endfor %}
+    {% else %}
+      {% for vehiculo in vehiculos %}
+        <tr>
+          <th scope="row">{{ vehiculo.idVehiculo }}</th>
+          <td>{{ vehiculo.marca }}</td>
+          <td>{{ vehiculo.modelo }}</td>
+          <td>${{ vehiculo.precio }}</td>
+          <td>{{ vehiculo.anio }}</td>
+          <td>
+            <a href="{{ url_for('modificar_vehiculo', id=vehiculo.idVehiculo) }}" class="btn btn-info btn-sm">Modificar</a>
+            <a href="{{ url_for('eliminar_vehiculo', id=vehiculo.idVehiculo) }}" class="btn btn-danger btn-sm">Eliminar</a>
+          </td>
+        </tr>
+      {% endfor %}
+    {% endif %}
+    
     </tbody>
   </table>
 </div>
